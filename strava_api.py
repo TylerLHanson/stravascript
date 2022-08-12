@@ -27,4 +27,23 @@ mydata = requests.get(
 ).json()
 
 
-print(mydata)
+
+# import pandas as pd 
+# from pandas.io.json import json_normalize
+
+# activities = json_normalize(mydata)
+# print(activities)
+# print(activities.columns)
+
+# print(activities['id'])
+
+
+# search for comments
+examplecomments = requests.get(
+    "https://www.strava.com/api/v3/activities/xxxx/comments",
+    headers={'Authorization': 'Bearer ' + access_token},
+    #params={'per_page': 200, 'page': 1}
+).json()
+
+print(examplecomments)
+
