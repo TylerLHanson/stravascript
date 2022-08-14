@@ -3,7 +3,6 @@ import urllib3
 requests.packages.urllib3.disable_warnings()
 import pandas as pd 
 from pandas.io.json import json_normalize
-from tqdm import tqdm
 
 
 # post request with your client info and refresh token to obtain updated access token (access tokens expire every 6 hours)
@@ -23,31 +22,30 @@ access_token = requests.post("https://www.strava.com/oauth/token",
 
 
 # store the data passed back from get request in mydata object
-mydata = requests.get(
+my_activities = requests.get(
     "https://www.strava.com/api/v3/athlete/activities",
     headers={'Authorization': 'Bearer ' + access_token},
     params={'per_page': 200, 'page': 1}
 ).json()
 
-
-activities = json_normalize(mydata)
-print(activities)
-print(activities.columns)
-print(activities.sport_type)
-
-# search for comments
-examplecomments = requests.get(
-    "https://www.strava.com/api/v3/activities/xxxx/comments",
-    headers={'Authorization': 'Bearer ' + access_token},
-    params={'per_page': 200, 'page': 1}
-).json()
-
-print(examplecomments)
+# see activities list
+print('See activities list:')
+print(my_activities)
+# my_activities_df = json_normalize(my_activities)
+# print(my_activities_df)
+# print(my_activities_df.columns)
+# print(my_activities_df.sport_type)
 
 
-activities['comments'] = None
-for a, b in tqdm(activities.iterrows(), total=activities.shape[0]):
-    get_comments_url = "https://www.strava.com/api/v3/activities/{}/comments".format(b['id'])
-    print(get_comments_url)
-    if b['type'] == 'Surfing':
-        print(b)
+comments = []
+for x in my_activities:
+    if x['sport_type'] == 'Surfing':
+        url = "https://www.strava.com/api/v3/activities/{}/comments".format(x['id'])
+        activity_comments = requests.get(url, headers={'Authorization': 'Bearer ' + access_token}).json()
+        # unpack extra layer (list of lists of dictionaries -> list of dictionaries) upfront
+        for d in activity_comments:
+            comments.append(d)
+
+print(' ')
+print('See comments list:')
+print(comments)
