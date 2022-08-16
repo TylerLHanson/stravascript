@@ -47,9 +47,9 @@ for x in my_activities:
             # use dict comprehension to grab only the necessary data
             data = {k:v for (k,v) in d.items() if k=='activity_id' or k=='text'}
             # data = {}
-            # for a,b in d.items():
-            #     if a=='activity_id' or a=='text':
-            #         data[a] = b
+            # for k,v in d.items():
+            #     if k=='activity_id' or k=='text':
+            #         data[k] = v
             comments.append(data)
 
 print(' ')
