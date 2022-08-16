@@ -44,8 +44,14 @@ for x in my_activities:
         activity_comments = requests.get(url, headers={'Authorization': 'Bearer ' + access_token}).json()
         # unpack extra layer (list of lists of dictionaries -> list of dictionaries) upfront
         for d in activity_comments:
-            comments.append(d)
+            # use dict comprehension to grab only the necessary data
+            data = {k:v for (k,v) in d.items() if k=='activity_id' or k=='text'}
+            comments.append(data)
 
 print(' ')
 print('See comments list:')
 print(comments)
+
+
+my_comments_df = json_normalize(comments)
+print(my_comments_df)
