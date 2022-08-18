@@ -56,6 +56,16 @@ print(' ')
 print('See comments list:')
 print(comments)
 
-
 my_comments_df = json_normalize(comments)
+
+
+def read_comments(row):
+    if row['text'].isdigit():
+        return 'wave_count'
+    elif 'ft.' in row['text']:
+        return 'surf_report'
+    else:
+        return 'surf_spot'
+    
+my_comments_df['comment_category'] = my_comments_df.apply(lambda  row: read_comments(row), axis=1)
 print(my_comments_df)
