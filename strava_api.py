@@ -28,13 +28,7 @@ my_activities = requests.get(
     params={'per_page': 200, 'page': 1}
 ).json()
 
-# see activities list
-print('See activities list:')
-print(my_activities)
-# my_activities_df = json_normalize(my_activities)
-# print(my_activities_df)
-# print(my_activities_df.columns)
-# print(my_activities_df.sport_type)
+my_activities_df = json_normalize(my_activities)
 
 
 comments = []
@@ -52,9 +46,6 @@ for x in my_activities:
             #         data[k] = v
             comments.append(data)
 
-print(' ')
-print('See comments list:')
-print(comments)
 
 my_comments_df = json_normalize(comments)
 
@@ -68,4 +59,7 @@ def read_comments(row):
         return 'surf_spot'
     
 my_comments_df['comment_category'] = my_comments_df.apply(lambda  row: read_comments(row), axis=1)
-print(my_comments_df)
+my_comments_pivoted = pd.pivot(my_comments_df, index="activity_id", columns="comment_category", values="text")
+surf_activity_data = my_comments_pivoted.merge(my_activities_df, left_index=True, right_on="id")
+surf_activity_data = surf_activity_data.reset_index(drop=True)
+print(surf_activity_data)
