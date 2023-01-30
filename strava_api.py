@@ -63,3 +63,4 @@ my_comments_pivoted = pd.pivot(my_comments_df, index="activity_id", columns="com
 surf_activity_data = my_comments_pivoted.merge(my_activities_df, left_index=True, right_on="id")
 surf_activity_data = surf_activity_data.reset_index(drop=True)
 print(surf_activity_data)
+# test 2
